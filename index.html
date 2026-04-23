@@ -1953,9 +1953,13 @@ footer {
         <p>3営業日以内に、厳選物件リストをお届けします</p>
       </div>
 
+      <!-- お名前（姓名分離） -->
       <div class="form-group">
         <label>お名前<span class="req">※必須</span></label>
-        <input type="text" name="name" placeholder="山田 花子" required>
+        <div class="form-row">
+          <input type="text" name="lastName" placeholder="姓（例：山田）" required>
+          <input type="text" name="firstName" placeholder="名（例：花子）" required>
+        </div>
       </div>
       <div class="form-group">
         <label>生年月日<span class="req">※必須</span></label>
@@ -1998,15 +2002,30 @@ footer {
         <label>メールアドレス<span class="req">※必須</span></label>
         <input type="email" name="email" placeholder="example@mail.com" required>
       </div>
+      <!-- 電話番号（必須化） -->
       <div class="form-group">
-        <label>電話番号<span class="opt">任意</span></label>
-        <input type="tel" name="phone" placeholder="090-0000-0000" pattern="[0-9\-\+\(\) ]{10,}">
-        <p class="form-help">お急ぎの方・お電話でのご連絡をご希望の方のみご記入ください。</p>
+        <label>電話番号<span class="req">※必須</span></label>
+        <input type="tel" name="phone" placeholder="090-0000-0000" pattern="[0-9\-\+\(\) ]{10,}" required>
+        <p class="form-help">提携不動産会社からのご連絡に使用いたします。</p>
       </div>
+      <!-- 現在のお住まい（都道府県+市区町村） -->
+      <div class="form-group">
+        <label>現在のお住まい<span class="req">※必須</span></label>
+        <div class="form-row">
+          <select name="currentPref" class="pref-select" required>
+            <option value="">都道府県</option>
+          </select>
+          <input type="text" name="currentCity" placeholder="市区町村(例：新宿区)" required>
+        </div>
+      </div>
+      <!-- 引っ越し予定エリア -->
       <div class="form-row">
         <div class="form-group">
-          <label>現在のお住まい<span class="req">※必須</span></label>
-          <input type="text" name="current" placeholder="東京都 新宿区" required>
+          <label>引っ越し予定のエリア<span class="req">※必須</span></label>
+          <select name="movePref" class="pref-select" required>
+            <option value="">都道府県を選択</option>
+          </select>
+          <p class="form-help">未定・診断結果に委ねる方は「未定」を選択してください。</p>
         </div>
         <div class="form-group">
           <label>引っ越し検討時期<span class="req">※必須</span></label>
@@ -2329,6 +2348,31 @@ function fillSelects(y,m,d){
 }
 fillSelects(document.getElementById('previewYear'),document.getElementById('previewMonth'),document.getElementById('previewDay'));
 fillSelects(document.querySelector('select[name="year"]'),document.querySelector('select[name="month"]'),document.querySelector('select[name="day"]'));
+
+/* ---------- 都道府県 ---------- */
+const PREFECTURES = [
+  '北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県',
+  '茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県',
+  '新潟県','富山県','石川県','福井県','山梨県','長野県',
+  '岐阜県','静岡県','愛知県','三重県',
+  '滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県',
+  '鳥取県','島根県','岡山県','広島県','山口県',
+  '徳島県','香川県','愛媛県','高知県',
+  '福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県'
+];
+document.querySelectorAll('.pref-select').forEach(sel=>{
+  PREFECTURES.forEach(p=>{
+    const o=document.createElement('option');
+    o.value=p;o.textContent=p;
+    sel.appendChild(o);
+  });
+  // 引っ越し予定には「未定」を先頭に追加
+  if(sel.name==='movePref'){
+    const mitei=document.createElement('option');
+    mitei.value='未定';mitei.textContent='未定（診断結果を参考にしたい）';
+    sel.insertBefore(mitei, sel.children[1]);
+  }
+});
 
 /* ---------- マスコットSVG（色だけ変わる） ---------- */
 /* ---------- タイプ別コンテンツ（9種類） ---------- */
